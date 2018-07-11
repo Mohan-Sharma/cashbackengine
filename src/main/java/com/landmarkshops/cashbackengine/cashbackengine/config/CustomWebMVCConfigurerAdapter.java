@@ -10,20 +10,21 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 /**
  * @author Mohan Sharma Created on 13/07/18.
  */
 @Configuration
-public class CustomWebMVCConfigurerAdapter extends WebMvcConfigurerAdapter
+public class CustomWebMVCConfigurerAdapter extends WebMvcConfigurationSupport
 {
 
 	private static final String[] RESOURCE_LOCATIONS =
@@ -68,13 +69,17 @@ public class CustomWebMVCConfigurerAdapter extends WebMvcConfigurerAdapter
 		objectMapper.registerModule(new SimpleModule("DefaultModule"));
 		converter.setObjectMapper(objectMapper);
 		converters.add(converter);
+		super.addDefaultHttpMessageConverters(converters);
 	}
 
 	public ObjectMapper constructObjectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+		objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+		objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
 		return objectMapper;
 	}
 

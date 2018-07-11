@@ -14,6 +14,6 @@ public class OrdersData
 {
 	private String orderCode;
 	private String customerPk;
-	private String[] categories;
+	//private String[] categories;
 	private PriceData price;
 }
