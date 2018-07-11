@@ -34,7 +34,7 @@ public class LMGCashBackServiceImpl implements LMGCashBackService {
 		Orders doc = new Orders();
 		doc.setCustomerPk(customerPK);
 		doc.setOrderNumber(orderNumber);
-		mongoTemplate.insert(doc,collectionName);
+		mongoTemplate.save(doc,collectionName);
 		
 	}
 
