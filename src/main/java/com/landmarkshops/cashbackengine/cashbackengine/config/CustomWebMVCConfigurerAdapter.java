@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 /**
- * @author Mohan Sharma Created on 07/02/18.
+ * @author Mohan Sharma Created on 13/07/18.
  */
 @Configuration
 public class CustomWebMVCConfigurerAdapter extends WebMvcConfigurerAdapter

@@ -6,7 +6,7 @@ spring:
     file: log.xml
 
   datasource:
-    url: jdbc:mysql://localhost:3306/hybris?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&rewriteBatchedStatements=true&autoReconnect=true&autoReconnectForPools=true
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&rewriteBatchedStatements=true&autoReconnect=true&autoReconnectForPools=true
     username: root
     password:
     driverClassName: com.mysql.jdbc.Driver
@@ -26,17 +26,16 @@ spring:
         ddl-auto: validate
         hbm2ddl:
           import_files:
+  data:
+    mongodb:
+      hostname: localhost
+      port: 27017
+      username:
+      password:
+      database: test
 
 server:
   port: 2003
   context-path: /cashbackengine
   servlet-path: /
-  
-
-db:
- hostname: localhost
- port: 27017
- username: lms
- password: test@123
- name: lmscb
     

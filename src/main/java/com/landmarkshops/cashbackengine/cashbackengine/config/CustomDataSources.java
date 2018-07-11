@@ -17,12 +17,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * @author Mohan Sharma Created on 08/02/18.
+ * @author Mohan Sharma Created on 13/07/18.
  */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = { "com.landmarkshops.cashbackengine.cashbackengine.domain.model" })
-public class CusotmDataSources
+public class CustomDataSources
 {
 	@Primary
 	@Bean(name = "dataSource")

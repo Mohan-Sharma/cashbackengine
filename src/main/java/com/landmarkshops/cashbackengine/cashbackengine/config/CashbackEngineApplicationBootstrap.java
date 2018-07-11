@@ -13,9 +13,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableTransactionManagement
 @EnableWebMvc
 @ComponentScan(basePackages = {"com.landmarkshops.cashbackengine.cashbackengine"})
-public class CashbackEngineApplication
+public class CashbackEngineApplicationBootstrap
 {
 	public static void main(String[] args) {
-		SpringApplication.run(CashbackEngineApplication.class, args);
+		SpringApplication.run(CashbackEngineApplicationBootstrap.class, args);
 	}
 }

@@ -8,9 +8,8 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 
 /**
- * @author Mohan Sharma Created on 07/02/18.
+ * @author Mohan Sharma Created on 13/07/18.
  */
-
 @Configuration
 public class CustomDispatcherServlet
 {
