@@ -13,7 +13,10 @@ import lombok.Setter;
 public class OrdersData
 {
 	private String orderCode;
+	
 	private String customerPk;
-	//private String[] categories;
+	
 	private PriceData price;
+	
+	private String orderStatus;
 }
