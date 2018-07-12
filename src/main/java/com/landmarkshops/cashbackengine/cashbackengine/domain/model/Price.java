@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-@Immutable
 public class Price implements Serializable
 {
 	private BigDecimal value;
