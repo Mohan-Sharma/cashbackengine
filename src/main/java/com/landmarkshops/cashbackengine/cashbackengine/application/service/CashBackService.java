@@ -7,7 +7,7 @@ import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.OrdersD
 public interface CashBackService
 {
 
-	void pushTodb(final OrdersData ordersData);
+	void persistOrderDetails(final OrdersData ordersData);
 
 	List<OrdersData> fetchAllOrders();
 }

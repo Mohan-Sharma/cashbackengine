@@ -15,8 +15,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
 
 
 /**
@@ -62,5 +60,10 @@ public class CustomMongoDbConfiguration extends AbstractMongoConfiguration
 	@Override
 	protected String getDatabaseName() {
 		return databaseName;
+	}
+
+	@Override
+	protected String getMappingBasePackage() {
+		return "com.landmarkshops.cashbackengine.cashbackengine.domain.model";
 	}
 }

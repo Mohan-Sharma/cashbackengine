@@ -1,13 +1,19 @@
 package com.landmarkshops.cashbackengine.cashbackengine.domain.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.google.common.collect.Sets;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,12 +23,35 @@ import lombok.Setter;
  */
 @NoArgsConstructor
 @Getter
-@Setter
 @Document
+@EqualsAndHashCode(of = "customerPK")
 public class Customer extends Auditable implements Serializable
 {
 	@Id
 	@NotNull
-	private long customerPK;
+	private long customerPk;
+	private Set<Orders> orders;
+	private Set<Offer> offers;
 
+	public Customer withCustomerPk(final long customerPk)
+	{
+		this.customerPk = customerPk;
+		return this;
+	}
+
+	public Customer withOrders(final Orders orders)
+	{
+		if(CollectionUtils.isEmpty(this.orders))
+			this.orders = Sets.newHashSet();
+		this.orders.add(orders);
+		return this;
+	}
+
+	public Customer withOffers(final Offer offer)
+	{
+		if(CollectionUtils.isEmpty(this.offers))
+			this.offers = Sets.newHashSet();
+		this.offers.add(offer);
+		return this;
+	}
 }

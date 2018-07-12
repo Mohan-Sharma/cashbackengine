@@ -2,13 +2,11 @@ package com.landmarkshops.cashbackengine.cashbackengine.presentation.controllers
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import javax.annotation.Resource;
 
-import org.jeasy.rules.annotation.Rule;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.api.RulesEngine;
@@ -33,10 +31,10 @@ public class CashBackController
 	@Resource
 	private CashBackService cashBackService;
 	
-	@RequestMapping(value = "/postEvent", method = RequestMethod.POST)
+	@RequestMapping(value = "/postOrder", method = RequestMethod.POST)
 	public @ResponseBody String publishOrderPlaceEvent(@RequestBody final OrdersData ordersData)
 	{
-		cashBackService.pushTodb(ordersData);
+		cashBackService.persistOrderDetails(ordersData);
 		return "Success";
 	}
 
