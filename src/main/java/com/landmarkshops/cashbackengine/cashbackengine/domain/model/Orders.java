@@ -1,11 +1,14 @@
 package com.landmarkshops.cashbackengine.cashbackengine.domain.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.stream.Stream;
 
-import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.LocalDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,17 +20,25 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Embeddable
-@Builder
 @EqualsAndHashCode(of = "orderCode")
 @AllArgsConstructor
-public class Orders extends Auditable implements Serializable
+@Document
+@Builder(toBuilder = true)
+public class Orders implements Serializable
 {
-	private String orderCode;
+	@Id
+	@NotNull
+	private long orderCode;
+	@NotEmpty
 	private String[] categories;
+	@NotNull
 	private Price price;
+	@NotNull
 	private OrderStatus orderStatus;
+	@NotNull
 	private LocalDate orderCreationTime;
+	@NotNull
+	private long customerPk;
 
 	public enum OrderStatus
 	{
@@ -46,6 +57,11 @@ public class Orders extends Auditable implements Serializable
 					.of(OrderStatus.values())
 					.filter(orderStatus -> orderStatus.description.equalsIgnoreCase(description)).findAny().orElse(OrderStatus.IN_PROGRESS);
 
+		}
+
+		public String getDescription()
+		{
+			return description;
 		}
 	}
 }

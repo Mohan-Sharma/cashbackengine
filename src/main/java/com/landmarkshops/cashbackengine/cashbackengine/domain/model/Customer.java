@@ -3,6 +3,7 @@ package com.landmarkshops.cashbackengine.cashbackengine.domain.model;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -23,39 +24,18 @@ import lombok.Setter;
  */
 @NoArgsConstructor
 @Getter
-@Document
+@Embeddable
 @EqualsAndHashCode(of = "customerPK")
-public class Customer extends Auditable implements Serializable
+@Builder
+@AllArgsConstructor
+public class Customer implements Serializable
 {
-	@Id
 	@NotNull
 	private long customerPk;
-	private Set<Orders> orders;
-	private Set<Offer> offers;
 
 	public Customer withCustomerPk(final long customerPk)
 	{
 		this.customerPk = customerPk;
-		return this;
-	}
-
-	public Customer withOrders(final Orders orders)
-	{
-		if(CollectionUtils.isEmpty(this.orders))
-			this.orders = Sets.newHashSet();
-		if(this.orders.contains(orders))
-			this.orders.remove(orders);
-		this.orders.add(orders);
-		return this;
-	}
-
-	public Customer withOffers(final Offer offer)
-	{
-		if(CollectionUtils.isEmpty(this.offers))
-			this.offers = Sets.newHashSet();
-		if(this.offers.contains(offer))
-			this.offers.remove(offer);
-		this.offers.add(offer);
 		return this;
 	}
 }

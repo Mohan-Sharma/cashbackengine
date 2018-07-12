@@ -3,23 +3,24 @@ package com.landmarkshops.cashbackengine.cashbackengine.application.service.impl
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.BeanUtils;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 import com.landmarkshops.cashbackengine.cashbackengine.application.service.CashBackService;
-import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Customer;
-import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Offer;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Orders;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Orders.OrderStatus;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Price;
-import com.landmarkshops.cashbackengine.cashbackengine.persistence.CustomerRepository;
+import com.landmarkshops.cashbackengine.cashbackengine.persistence.OrdersRepository;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.OrdersData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.PriceData;
 
@@ -31,41 +32,49 @@ public class CashBackServiceImpl implements CashBackService
 	private MongoTemplate mongoTemplate;
 
 	@Autowired
-	private CustomerRepository customerRepository;
+	private OrdersRepository ordersRepository;
+
+	private Function<Price, PriceData> priceMapper =
+			price -> PriceData
+					.builder()
+					.value(price.getValue())
+					.currencyISO(price.getCurrencyISO())
+					.build();
 
 	private Function<Orders, OrdersData> ordersMapper =
 			order ->
-			{
-				OrdersData ordersData = new OrdersData();
-				BeanUtils.copyProperties(order, ordersData);
-				return ordersData;
-			};
+				OrdersData
+						.builder()
+						.orderCode(order.getOrderCode())
+						.categories(order.getCategories())
+						.customerPk(order.getCustomerPk())
+						.orderCreationTime(order.getOrderCreationTime())
+						.orderStatus(order.getOrderStatus().getDescription())
+						.price(priceMapper.apply(order.getPrice()))
+						.build();
 
 	@Override
 	public void persistOrderDetails(final OrdersData ordersData)
 	{
-		Customer customer = customerRepository.findOne(ordersData.getCustomerPk());
-		if(Objects.isNull(customer))
-			customer = new Customer();
-		Orders order = constructOrder(ordersData);
-		customer
-				.withCustomerPk(ordersData.getCustomerPk())
-				.withOrders(order)
-				.withOffers(new Offer());
-		customerRepository.save(customer);
+		Orders orders = ordersRepository.findOne(ordersData.getOrderCode());
+		if(Objects.isNull(orders))
+			orders = new Orders();
+		orders = populateWithOrderData(orders, ordersData);
+		ordersRepository.save(orders);
 	}
 
-	private Orders constructOrder(OrdersData ordersData)
+	private Orders populateWithOrderData(final Orders orders, final OrdersData ordersData)
 	{
 		final Price price = constructPrice(ordersData);
 		final OrderStatus orderStatus = OrderStatus.getOrderStatusForDescription(ordersData.getOrderStatus());
-		return Orders
-				.builder()
+		return orders
+				.toBuilder()
 				.orderCode(ordersData.getOrderCode())
 				.categories(ordersData.getCategories())
 				.orderStatus(orderStatus)
 				.price(price)
 				.orderCreationTime(ordersData.getOrderCreationTime())
+				.customerPk(ordersData.getCustomerPk())
 				.build();
 	}
 
@@ -82,12 +91,23 @@ public class CashBackServiceImpl implements CashBackService
 	@Override
 	public List<OrdersData> fetchAllOrders()
 	{
-		List<Customer> orders = customerRepository.findAll();
+		List<Orders> orders = ordersRepository.findAll();
 		if(CollectionUtils.isNotEmpty(orders))
 		{
-			//return orders.stream().map(ordersMapper).collect(Collectors.toList());
+			return orders.stream().map(ordersMapper).collect(Collectors.toList());
 		}
 		return Collections.EMPTY_LIST;
+	}
+
+	@Override
+	public Set<String> getAllCategoryForCustomer(long customerPK, int durationInDays)
+	{
+		LocalDate currentDate = LocalDate.now();
+		LocalDate pastDate = currentDate.minusDays(durationInDays);
+		List<Orders> orders = ordersRepository.findAllByCustomerPkAndOrderCreationTimeBetween(customerPK, pastDate, currentDate);
+		if(CollectionUtils.isNotEmpty(orders))
+			return orders.stream().map(Orders::getCategories).flatMap(Stream::of).collect(Collectors.toSet());
+		return Collections.EMPTY_SET;
 	}
 
 }

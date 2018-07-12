@@ -3,6 +3,7 @@ package com.landmarkshops.cashbackengine.cashbackengine.presentation.controllers
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 import javax.annotation.Resource;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.landmarkshops.cashbackengine.cashbackengine.application.events.OrderReceivedEventPublisher;
@@ -48,6 +50,13 @@ public class CashBackController
 	{
 		return cashBackService.fetchAllOrders();
 	}
+
+
+	@RequestMapping(value = "/getAllCategoryForCustomer", method = RequestMethod.GET)
+	public @ResponseBody Set<String> getAllCategoryForCustomer(@RequestParam final long customerPK, @RequestParam final int durationInDays)
+	{
+		return cashBackService.getAllCategoryForCustomer(customerPK, durationInDays);
+	}
 	
 	
 	@RequestMapping(value = "/testRule", method = RequestMethod.GET)
@@ -55,7 +64,7 @@ public class CashBackController
 	{
 			List<OrdersData> fetchAllOrders = new ArrayList<>();
 			OrdersData data = new OrdersData();
-			data.setOrderCode("2312");
+			data.setOrderCode(2312L);
 			data.setOrderStatus("delivered");
 			PriceData price = new PriceData();
 			price.setCurrencyISO("INR");
