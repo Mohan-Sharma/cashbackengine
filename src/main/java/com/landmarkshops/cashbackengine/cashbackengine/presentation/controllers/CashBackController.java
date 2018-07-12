@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.landmarkshops.cashbackengine.cashbackengine.application.events.OrderReceivedEventPublisher;
 import com.landmarkshops.cashbackengine.cashbackengine.application.service.CashBackService;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.rules.OrderTargetMileStoneRuleListener;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.rules.OrderTargetMilestonesRule;
@@ -31,10 +32,14 @@ public class CashBackController
 	@Resource
 	private CashBackService cashBackService;
 	
+	@Resource
+	private OrderReceivedEventPublisher orderRecivedEventPublisher;
+	
 	@RequestMapping(value = "/postOrder", method = RequestMethod.POST)
 	public @ResponseBody String publishOrderPlaceEvent(@RequestBody final OrdersData ordersData)
 	{
 		cashBackService.persistOrderDetails(ordersData);
+		orderRecivedEventPublisher.publish(ordersData.getCustomerPk());
 		return "Success";
 	}
 

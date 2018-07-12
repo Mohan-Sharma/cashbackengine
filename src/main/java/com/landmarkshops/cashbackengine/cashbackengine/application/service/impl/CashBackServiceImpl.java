@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -14,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
+import com.landmarkshops.cashbackengine.cashbackengine.application.service.CashBackService;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Customer;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Offer;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Orders;
-import com.landmarkshops.cashbackengine.cashbackengine.application.service.CashBackService;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Orders.OrderStatus;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Price;
 import com.landmarkshops.cashbackengine.cashbackengine.persistence.CustomerRepository;
