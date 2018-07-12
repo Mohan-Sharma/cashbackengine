@@ -2,24 +2,27 @@ package com.landmarkshops.cashbackengine.cashbackengine.domain.model;
 
 import java.io.Serializable;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.persistence.Embeddable;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Document
 @Getter
 @Setter
 @NoArgsConstructor
-public class Orders implements Serializable
+@Embeddable
+public class Orders extends Auditable implements Serializable
 {
-	@Id
 	private String orderCode;
-	private String customerPk;
 	private String[] categories;
 	private Price price;
-	
+	private OrderStatus orderStatus;
+	private String conceptCode;
+
+	public enum OrderStatus
+	{
+
+	}
 }
