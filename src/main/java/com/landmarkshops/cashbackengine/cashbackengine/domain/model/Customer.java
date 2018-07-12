@@ -43,6 +43,8 @@ public class Customer extends Auditable implements Serializable
 	{
 		if(CollectionUtils.isEmpty(this.orders))
 			this.orders = Sets.newHashSet();
+		if(this.orders.contains(orders))
+			this.orders.remove(orders);
 		this.orders.add(orders);
 		return this;
 	}
@@ -51,6 +53,8 @@ public class Customer extends Auditable implements Serializable
 	{
 		if(CollectionUtils.isEmpty(this.offers))
 			this.offers = Sets.newHashSet();
+		if(this.offers.contains(offer))
+			this.offers.remove(offer);
 		this.offers.add(offer);
 		return this;
 	}
