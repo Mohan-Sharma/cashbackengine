@@ -60,12 +60,13 @@ public class CashBackServiceImpl implements CashBackService
 		final Price price = constructPrice(ordersData);
 		final OrderStatus orderStatus = OrderStatus.getOrderStatusForDescription(ordersData.getOrderStatus());
 		return Orders
-					.builder()
-					.orderCode(ordersData.getOrderCode())
-					.categories(ordersData.getCategories())
-					.orderStatus(orderStatus)
-					.price(price)
-					.build();
+				.builder()
+				.orderCode(ordersData.getOrderCode())
+				.categories(ordersData.getCategories())
+				.orderStatus(orderStatus)
+				.price(price)
+				.orderCreationTime(ordersData.getOrderCreationTime())
+				.build();
 	}
 
 	private Price constructPrice(final OrdersData ordersData)
