@@ -7,6 +7,7 @@ import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.api.RulesEngine;
 import org.jeasy.rules.core.DefaultRulesEngine;
+import org.springframework.stereotype.Component;
 
 import com.landmarkshops.cashbackengine.cashbackengine.cashbackexecutors.CashBackExecutor;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackFacts;
@@ -14,6 +15,7 @@ import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Orders;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.rules.OrderTargetMileStoneRuleListener;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.rules.OrderTargetMilestonesRule;
 
+@Component
 public class OrderTargetCashbackExecutor implements CashBackExecutor {
 
 	

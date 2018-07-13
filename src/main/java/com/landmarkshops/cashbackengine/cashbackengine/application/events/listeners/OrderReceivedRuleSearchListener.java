@@ -19,10 +19,7 @@ import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffe
 @Component
 public class OrderReceivedRuleSearchListener  {
 
-	
-	@Value("${rules.basepackage}")
-	private String basepackage;
-	
+
 	@Resource
 	CashBackService cashBackService;
 	
