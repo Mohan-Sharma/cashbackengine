@@ -46,9 +46,9 @@ public class CashBackController
 	}
 
 	@RequestMapping(value = "/getOrders", method = RequestMethod.GET)
-	public @ResponseBody List<OrdersData> findAllOrders()
+	public @ResponseBody List<OrdersData> findAllOrders(@RequestParam(required = false) final Integer durationInDays)
 	{
-		return cashBackService.fetchAllOrders();
+		return cashBackService.fetchAllOrders(durationInDays);
 	}
 
 

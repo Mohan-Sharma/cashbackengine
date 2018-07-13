@@ -89,9 +89,17 @@ public class CashBackServiceImpl implements CashBackService
 	}
 
 	@Override
-	public List<OrdersData> fetchAllOrders()
+	public List<OrdersData> fetchAllOrders(final Integer durationInDays)
 	{
-		List<Orders> orders = ordersRepository.findAll();
+		List<Orders> orders;
+		if(Objects.isNull(durationInDays))
+			orders = ordersRepository.findAll();
+		else
+		{
+			LocalDate currentDate = LocalDate.now();
+			LocalDate pastDate = currentDate.minusDays(durationInDays);
+			orders = ordersRepository.findAllByOrderCreationTimeBetween(pastDate, currentDate);
+		}
 		if(CollectionUtils.isNotEmpty(orders))
 		{
 			return orders.stream().map(ordersMapper).collect(Collectors.toList());
