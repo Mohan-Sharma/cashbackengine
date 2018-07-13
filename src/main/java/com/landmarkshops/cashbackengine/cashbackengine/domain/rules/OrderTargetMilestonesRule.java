@@ -26,9 +26,14 @@ public class OrderTargetMilestonesRule {
 
 	@Condition
 	public boolean itChecks(@Fact("orders") List<OrdersData> orders,@Fact("thresholdQuantity") String thresholdQuantity,
-			@Fact("minOrderValue") BigDecimal minOrderValue, @Fact("orderStatus") String orderStatus, @Fact("cashbackId") long cashbackId, @Fact("customerPk") long customerPk) {
+			@Fact("minOrderValue") String minOrderValue, @Fact("orderStatus") String orderStatus, @Fact("cashbackId") long cashbackId, @Fact("customerPk") long customerPk) {
 
-		Long numberOfOrder = orders.stream().filter(order ->order.getOrderStatus().equals(orderStatus)).filter(order -> order.getPrice().getValue().doubleValue()>=minOrderValue.doubleValue()).count();
+		final double minimumOrderTotal = Double.valueOf(minOrderValue);
+		Long numberOfOrder = orders
+				.stream()
+				.filter(order -> order.getOrderStatus().equalsIgnoreCase(orderStatus))
+				.filter(order -> order.getPrice().getValue().doubleValue() >= minimumOrderTotal)
+				.count();
 
 		if(numberOfOrder>0)
 		{
@@ -37,10 +42,10 @@ public class OrderTargetMilestonesRule {
 			ClaimCashBack claim = claimRepository.findOneByCashbackIdAndCustomerPk(cashbackId, customerPk);
 			if(Objects.isNull(claim))
 			{
-				claim = ClaimCashBack.builder().build();
+				claim = new ClaimCashBack();
 			}
 			List<Stage> stages = new ArrayList<>();
-			orders.stream().filter(order ->order.getOrderStatus().equals(orderStatus)).filter(order -> order.getPrice().getValue().doubleValue()>=minOrderValue.doubleValue()).forEach( order ->{
+			orders.stream().filter(order ->order.getOrderStatus().equals(orderStatus)).filter(order -> order.getPrice().getValue().doubleValue()>=minimumOrderTotal).forEach( order ->{
 				Stage stage = new Stage();
 				String orderCode = String.valueOf( order.getOrderCode());
 				stage.setIdentifier(orderCode);
@@ -55,6 +60,7 @@ public class OrderTargetMilestonesRule {
 					.status("IN_PROGRESS")
 					.stagePosition(numberOfOrder.intValue())
 					.stages(stages)
+					.claimId(cashbackId+customerPk)
 					.build();
 			claimRepository.save(claim);
 		}
@@ -69,7 +75,7 @@ public class OrderTargetMilestonesRule {
 	}
 
 	@Action
-	public void updateClaimStatus(@Fact("cashbackCode") long cashbackId,@Fact("customerPk") long customerPk)
+	public void updateClaimStatus(@Fact("cashbackId") long cashbackId,@Fact("customerPk") long customerPk)
 	{
 		ClaimCashBack claim = claimRepository.findOneByCashbackIdAndCustomerPk(cashbackId, customerPk);
 		claim.setStatus("READY_TO_CLAIM");

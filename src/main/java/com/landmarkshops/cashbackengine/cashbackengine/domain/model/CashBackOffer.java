@@ -3,6 +3,8 @@ package com.landmarkshops.cashbackengine.cashbackengine.domain.model;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,13 +21,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
-@EqualsAndHashCode(exclude = "cashbackId")
+@EqualsAndHashCode
 @AllArgsConstructor
 @Document
+@Builder(toBuilder = true)
 public class CashBackOffer implements Serializable
 {
 	@Id
+	@NotNull
 	private long cashbackId;
 	private Price claimAmount;
 	private String ruleFileName;

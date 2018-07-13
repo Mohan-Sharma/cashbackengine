@@ -2,6 +2,8 @@ package com.landmarkshops.cashbackengine.cashbackengine.domain.model;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,13 +17,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder(toBuilder = true)
-@EqualsAndHashCode(of="offerCode")
+@EqualsAndHashCode(of = "claimId")
 @AllArgsConstructor
 @Document
+@Builder(toBuilder = true)
 public class ClaimCashBack
 {
 	@Id
+	@NotNull
 	private long claimId;
 	private int stagePosition;
 	private List<Stage> stages;
