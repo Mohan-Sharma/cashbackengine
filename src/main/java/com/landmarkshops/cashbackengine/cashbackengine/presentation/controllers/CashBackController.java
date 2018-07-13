@@ -76,6 +76,13 @@ public class CashBackController
 		return "Success";
 	}
 
+	@RequestMapping(value = "/claim", method = RequestMethod.POST)
+	public @ResponseBody Double claim(@RequestBody final String ClaimId, final String customerPk)
+	{
+		return 100.0;
+	}
+	
+	
 	@RequestMapping(value = "/testRule", method = RequestMethod.GET)
 	public @ResponseBody List<OrdersData> testRule() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
 	{
