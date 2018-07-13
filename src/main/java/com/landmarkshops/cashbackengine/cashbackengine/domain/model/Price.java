@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 
 import javax.persistence.Embeddable;
 
-import org.hibernate.annotations.Immutable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
