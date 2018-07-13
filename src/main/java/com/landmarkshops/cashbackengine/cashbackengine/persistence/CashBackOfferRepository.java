@@ -10,7 +10,7 @@ import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffe
 /**
  * @author Mohan Sharma Created on 13/07/18.
  */
-public interface CashBackOfferRepository extends MongoRepository<CashBackOffer, Long>
+public interface CashBackOfferRepository extends MongoRepository<CashBackOffer, String>
 {
 	List<CashBackOffer> findAllByActive(Boolean active, Sort priority);
 }

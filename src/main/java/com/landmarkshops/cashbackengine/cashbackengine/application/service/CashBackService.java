@@ -14,13 +14,13 @@ public interface CashBackService
 
 	void persistOrderDetails(final OrdersData ordersData);
 
-	List<OrdersData> fetchAllOrdersForCustomer(final long customerPk, final Integer durationInDays);
+	List<OrdersData> fetchAllOrdersForCustomer(final String customerPk, final Integer durationInDays);
 
-	List<OrdersData> fetchAllOrdersForCustomerGreaterThanThresholdPrice(final long customerPk, final Integer durationInDays, final BigDecimal minOrderValue, String currencyISO);
+	List<OrdersData> fetchAllOrdersForCustomerGreaterThanThresholdPrice(final String customerPk, final Integer durationInDays, final BigDecimal minOrderValue, String currencyISO);
 
-	Set<String> getAllCategoryForCustomer(long customerPK, int durationInDays);
+	Set<String> getAllCategoryForCustomer(String customerPK, int durationInDays);
 
-	List<CashBackOffer> getAllActiveCashBackOffersNotClaimedByUser(long customerPk);
+	List<CashBackOffer> getAllActiveCashBackOffersNotClaimedByUser(String customerPk);
 
 	void persistCashbackOffer(final CashBackOfferData cashBackOfferData);
 }

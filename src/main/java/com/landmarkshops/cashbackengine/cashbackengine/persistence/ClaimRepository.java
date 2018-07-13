@@ -10,9 +10,9 @@ import com.landmarkshops.cashbackengine.cashbackengine.domain.model.ClaimCashBac
 /**
  * @author Mohan Sharma Created on 13/07/18.
  */
-public interface ClaimRepository extends MongoRepository<ClaimCashBack, Long>
+public interface ClaimRepository extends MongoRepository<ClaimCashBack, String>
 {
-	ClaimCashBack findOneByCashbackIdAndCustomerPk(final long cashbackId, final long customerPk);
+	ClaimCashBack findOneByCashbackIdAndCustomerPk(final String cashbackId, final String customerPk);
 
-	List<ClaimCashBack> findAllByCustomerPkAndStatusIn(long customerPk, List<String> status);
+	List<ClaimCashBack> findAllByCustomerPkAndStatusIn(String customerPk, List<String> status);
 }

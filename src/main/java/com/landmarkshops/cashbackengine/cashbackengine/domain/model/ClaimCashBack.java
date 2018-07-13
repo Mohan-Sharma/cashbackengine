@@ -1,5 +1,6 @@
 package com.landmarkshops.cashbackengine.cashbackengine.domain.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -21,14 +22,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @Document
 @Builder(toBuilder = true)
-public class ClaimCashBack
+public class ClaimCashBack implements Serializable
 {
 	@Id
 	@NotNull
-	private long claimId;
+	private String claimId;
 	private int stagePosition;
 	private List<Stage> stages;
 	private String status;
-	private long customerPk;
-	private long cashbackId;
+	private String customerPk;
+	private String cashbackId;
 }

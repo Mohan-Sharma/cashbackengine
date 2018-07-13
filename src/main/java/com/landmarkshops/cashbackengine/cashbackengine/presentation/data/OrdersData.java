@@ -23,7 +23,7 @@ import lombok.Setter;
 public class OrdersData
 {
 	private long orderCode;
-	private long customerPk;
+	private String customerPk;
 	private PriceData price;
 	private String orderStatus;
 	private String[] categories;

@@ -26,7 +26,7 @@ public class OrderTargetMilestonesRule {
 
 	@Condition
 	public boolean itChecks(@Fact("orders") List<OrdersData> orders,@Fact("thresholdQuantity") String thresholdQuantity,
-			@Fact("minOrderValue") String minOrderValue, @Fact("orderStatus") String orderStatus, @Fact("cashbackId") long cashbackId, @Fact("customerPk") long customerPk) {
+			@Fact("minOrderValue") String minOrderValue, @Fact("orderStatus") String orderStatus, @Fact("cashbackId") String cashbackId, @Fact("customerPk") String customerPk) {
 
 		final double minimumOrderTotal = Double.valueOf(minOrderValue);
 		Long numberOfOrder = orders
@@ -60,7 +60,6 @@ public class OrderTargetMilestonesRule {
 					.status("IN_PROGRESS")
 					.stagePosition(numberOfOrder.intValue())
 					.stages(stages)
-					.claimId(cashbackId+customerPk)
 					.build();
 			claimRepository.save(claim);
 		}
@@ -75,7 +74,7 @@ public class OrderTargetMilestonesRule {
 	}
 
 	@Action
-	public void updateClaimStatus(@Fact("cashbackId") long cashbackId,@Fact("customerPk") long customerPk)
+	public void updateClaimStatus(@Fact("cashbackId") String cashbackId,@Fact("customerPk") String customerPk)
 	{
 		ClaimCashBack claim = claimRepository.findOneByCashbackIdAndCustomerPk(cashbackId, customerPk);
 		claim.setStatus("READY_TO_CLAIM");

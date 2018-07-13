@@ -29,7 +29,7 @@ public class OrderTargetCashbackExecutor implements CashBackExecutor {
 	private OrderTargetMilestonesRule orderTargetMilestonesRule;
 
 	@Override
-	public void execute(final long caskbackId, final long customerPk) {
+	public void execute(final String caskbackId, final String customerPk) {
 
 		CashBackOffer cashBackOffer = cashBackOfferRepository.findOne(caskbackId);
 		Facts facts = new Facts();

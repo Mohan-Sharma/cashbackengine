@@ -18,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CashBackOfferData
 {
-	private long cashbackId;
+	private String cashbackId;
 	private PriceData claimAmount;
 	private String ruleFileName;
 	private boolean active;

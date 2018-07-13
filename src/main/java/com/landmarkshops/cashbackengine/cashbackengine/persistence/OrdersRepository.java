@@ -13,10 +13,10 @@ import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Orders;
  */
 public interface OrdersRepository extends MongoRepository<Orders, Long>
 {
-	List<Orders> findAllByCustomerPkAndOrderCreationTimeBetween(long customerPK, LocalDate orderCreationDateFrom, LocalDate orderCreationDateTo);
+	List<Orders> findAllByCustomerPkAndOrderCreationTimeBetween(String customerPK, LocalDate orderCreationDateFrom, LocalDate orderCreationDateTo);
 
 	List<Orders> findAllByOrderCreationTimeBetween(LocalDate orderCreationDateFrom, LocalDate orderCreationDateTo);
 
-	List<Orders> findAllByCustomerPkAndOrderCreationTimeBetweenAndPriceValueAndPriceCurrencyISO(long customerPk, LocalDate pastDate,
+	List<Orders> findAllByCustomerPkAndOrderCreationTimeBetweenAndPriceValueAndPriceCurrencyISO(String customerPk, LocalDate pastDate,
 			LocalDate currentDate, BigDecimal value, String currencyISO);
 }

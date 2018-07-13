@@ -4,9 +4,9 @@ import lombok.Getter;
 @Getter
 public class OrderReceivedEvent {
 
-	private long customerPk;
+	private String customerPk;
 	
-	public OrderReceivedEvent(long customerPk) {
+	public OrderReceivedEvent(String customerPk) {
 		
 		this.customerPk = customerPk;
 	}

@@ -111,7 +111,7 @@ public class CashBackServiceImpl implements CashBackService
 	}
 
 	@Override
-	public List<OrdersData> fetchAllOrdersForCustomer(final long customerPk, final Integer durationInDays)
+	public List<OrdersData> fetchAllOrdersForCustomer(final String customerPk, final Integer durationInDays)
 	{
 		List<Orders> orders;
 		if(Objects.isNull(durationInDays))
@@ -129,7 +129,7 @@ public class CashBackServiceImpl implements CashBackService
 		return Collections.EMPTY_LIST;
 	}
 
-	@Override public List<OrdersData> fetchAllOrdersForCustomerGreaterThanThresholdPrice(long customerPk,
+	@Override public List<OrdersData> fetchAllOrdersForCustomerGreaterThanThresholdPrice(String customerPk,
 			Integer durationInDays, BigDecimal minOrderValue, String currencyISO)
 	{
 		List<Orders> orders;
@@ -149,7 +149,7 @@ public class CashBackServiceImpl implements CashBackService
 	}
 
 	@Override
-	public Set<String> getAllCategoryForCustomer(long customerPK, int durationInDays)
+	public Set<String> getAllCategoryForCustomer(String customerPK, int durationInDays)
 	{
 		LocalDate currentDate = LocalDate.now();
 		LocalDate pastDate = currentDate.minusDays(durationInDays);
@@ -160,8 +160,8 @@ public class CashBackServiceImpl implements CashBackService
 	}
 
 	@Override
-	public List<CashBackOffer> getAllActiveCashBackOffersNotClaimedByUser(long customerPk) {
-		final Set<Long> claimedOffers = Sets.newHashSet();
+	public List<CashBackOffer> getAllActiveCashBackOffersNotClaimedByUser(String customerPk) {
+		final Set<String> claimedOffers = Sets.newHashSet();
 		List<CashBackOffer> cashBackOffers = cashBackOfferRepository.findAllByActive(Boolean.TRUE, new Sort(new Sort.Order(Sort.Direction.ASC, "priority")));
 		List<ClaimCashBack> claims = claimRepository.findAllByCustomerPkAndStatusIn(customerPk, Lists.newArrayList("CLAIMED", "READY_TO_CLAIM"));
 		if(CollectionUtils.isNotEmpty(claims))

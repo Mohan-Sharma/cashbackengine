@@ -29,7 +29,7 @@ public class CashBackOffer implements Serializable
 {
 	@Id
 	@NotNull
-	private long cashbackId;
+	private String cashbackId;
 	private Price claimAmount;
 	private String ruleFileName;
 	private boolean active;

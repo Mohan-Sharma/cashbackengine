@@ -55,7 +55,7 @@ public class CashBackController
 
 
 	@RequestMapping(value = "/getAllCategoryForCustomer", method = RequestMethod.GET)
-	public @ResponseBody Set<String> getAllCategoryForCustomer(@RequestParam final long customerPK, @RequestParam final int durationInDays)
+	public @ResponseBody Set<String> getAllCategoryForCustomer(@RequestParam final String customerPK, @RequestParam final int durationInDays)
 	{
 		return cashBackService.getAllCategoryForCustomer(customerPK, durationInDays);
 	}

@@ -11,7 +11,7 @@ public class OrderReceivedEventPublisher {
 	   private ApplicationEventPublisher applicationEventPublisher;
 	  
 	  
-	  public void publish(final long customerPk) {
+	  public void publish(final String customerPk) {
 	      
 		OrderReceivedEvent orderRecievedEvent = new OrderReceivedEvent(customerPk);
 		applicationEventPublisher.publishEvent(orderRecievedEvent);

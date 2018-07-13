@@ -3,7 +3,7 @@ package com.landmarkshops.cashbackengine.cashbackengine.cashbackexecutors;
 public interface CashBackExecutor {
 	
 	
-	void execute(long caskbackCode, long customerPk);
+	void execute(String caskbackId, String customerPk);
 	
 
 }

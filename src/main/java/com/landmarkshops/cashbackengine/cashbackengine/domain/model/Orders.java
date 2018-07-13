@@ -27,7 +27,6 @@ import lombok.Setter;
 public class Orders implements Serializable
 {
 	@Id
-	@NotNull
 	private long orderCode;
 	@NotEmpty
 	private String[] categories;
@@ -38,7 +37,7 @@ public class Orders implements Serializable
 	@NotNull
 	private LocalDate orderCreationTime;
 	@NotNull
-	private long customerPk;
+	private String customerPk;
 
 	public enum OrderStatus
 	{
