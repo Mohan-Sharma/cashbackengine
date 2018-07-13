@@ -1,5 +1,9 @@
 package com.landmarkshops.cashbackengine.cashbackengine.presentation.data;
 
+import java.util.List;
+
+import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Stage;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +18,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class CashBackFactData
+public class CashBackClaimData
 {
-	private String name;
-	private String value;
-	private String operator;
+	private String claimId;
+	private int stagePosition;
+	private List<Stage> stages;
+	private String status;
+	private String customerPk;
+	private String cashbackId;
 }

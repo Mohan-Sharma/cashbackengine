@@ -25,6 +25,7 @@ import com.landmarkshops.cashbackengine.cashbackengine.application.service.CashB
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffer;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.rules.OrderTargetMileStoneRuleListener;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CashBackOfferData;
+import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CustomerData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.OrdersData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.PriceData;
 
@@ -53,6 +54,11 @@ public class CashBackController
 		return null;
 	}
 
+	@RequestMapping(value = "/getClaimsAndOffersForCustomer", method = RequestMethod.GET)
+	public @ResponseBody CustomerData getClaimsAndOffersForCustomer(@RequestParam final String customerPk)
+	{
+		return cashBackService.getClaimsAndOffersForCustomer(customerPk);
+	}
 
 	@RequestMapping(value = "/getAllCategoryForCustomer", method = RequestMethod.GET)
 	public @ResponseBody Set<String> getAllCategoryForCustomer(@RequestParam final String customerPK, @RequestParam final int durationInDays)

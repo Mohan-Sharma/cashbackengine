@@ -30,7 +30,9 @@ import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Price;
 import com.landmarkshops.cashbackengine.cashbackengine.persistence.CashBackOfferRepository;
 import com.landmarkshops.cashbackengine.cashbackengine.persistence.ClaimRepository;
 import com.landmarkshops.cashbackengine.cashbackengine.persistence.OrdersRepository;
+import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CashBackClaimData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CashBackOfferData;
+import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CustomerData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.OrdersData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.PriceData;
 
@@ -75,8 +77,33 @@ public class CashBackServiceImpl implements CashBackService
 							.price(priceDataMapper.apply(order.getPrice()))
 							.build();
 
-	@Override
-	public void persistOrderDetails(final OrdersData ordersData)
+	private Function<CashBackOffer, CashBackOfferData> cashBackOfferMapper =
+			cashBackOffer ->
+					CashBackOfferData
+							.builder()
+							.cashbackId(cashBackOffer.getCashbackId())
+							.active(cashBackOffer.isActive())
+							.claimAmount(priceDataMapper.apply(cashBackOffer.getClaimAmount()))
+							.description(cashBackOffer.getDescription())
+							.offerName(cashBackOffer.getOfferName())
+							.priority(cashBackOffer.getPriority())
+							.ruleFileName(cashBackOffer.getRuleFileName())
+							.cashBackFacts(cashBackOffer.getCashBackFacts())
+							.build();
+
+
+	private Function<ClaimCashBack, CashBackClaimData> claimCashBackMapper =
+			claimCashBack -> CashBackClaimData
+					.builder()
+					.claimId(claimCashBack.getClaimId())
+					.stagePosition(claimCashBack.getStagePosition())
+					.status(claimCashBack.getStatus())
+					.customerPk(claimCashBack.getCustomerPk())
+					.cashbackId(claimCashBack.getCashbackId())
+					.stages(claimCashBack.getStages())
+					.build();
+
+	@Override public void persistOrderDetails(final OrdersData ordersData)
 	{
 		Orders orders = ordersRepository.findOne(ordersData.getOrderCode());
 		if(Objects.isNull(orders))
@@ -110,8 +137,7 @@ public class CashBackServiceImpl implements CashBackService
 				.build();
 	}
 
-	@Override
-	public List<OrdersData> fetchAllOrdersForCustomer(final String customerPk, final Integer durationInDays)
+	@Override public List<OrdersData> fetchAllOrdersForCustomer(final String customerPk, final Integer durationInDays)
 	{
 		List<Orders> orders;
 		if(Objects.isNull(durationInDays))
@@ -148,8 +174,7 @@ public class CashBackServiceImpl implements CashBackService
 		return Collections.EMPTY_LIST;
 	}
 
-	@Override
-	public Set<String> getAllCategoryForCustomer(String customerPK, int durationInDays)
+	@Override public Set<String> getAllCategoryForCustomer(String customerPK, int durationInDays)
 	{
 		LocalDate currentDate = LocalDate.now();
 		LocalDate pastDate = currentDate.minusDays(durationInDays);
@@ -159,8 +184,7 @@ public class CashBackServiceImpl implements CashBackService
 		return Collections.EMPTY_SET;
 	}
 
-	@Override
-	public List<CashBackOffer> getAllActiveCashBackOffersNotClaimedByUser(String customerPk) {
+	@Override public List<CashBackOffer> getAllActiveCashBackOffersNotClaimedByUser(String customerPk) {
 		final Set<String> claimedOffers = Sets.newHashSet();
 		List<CashBackOffer> cashBackOffers = cashBackOfferRepository.findAllByActive(Boolean.TRUE, new Sort(new Sort.Order(Sort.Direction.ASC, "priority")));
 		List<ClaimCashBack> claims = claimRepository.findAllByCustomerPkAndStatusIn(customerPk, Lists.newArrayList("CLAIMED", "READY_TO_CLAIM"));
@@ -173,13 +197,31 @@ public class CashBackServiceImpl implements CashBackService
 		return cashBackOffers;
 	}
 
-	@Override
-	public void persistCashbackOffer(CashBackOfferData cashBackOfferData)
+	@Override public void persistCashbackOffer(CashBackOfferData cashBackOfferData)
 	{
 		CashBackOffer cashBackOffer = CashBackOffer.builder().build();
 		BeanUtils.copyProperties(cashBackOfferData, cashBackOffer);
 		cashBackOffer.setClaimAmount(priceMapper.apply(cashBackOfferData.getClaimAmount()));
 		cashBackOfferRepository.save(cashBackOffer);
+	}
+
+	@Override public CustomerData getClaimsAndOffersForCustomer(String customerPk)
+	{
+		final CustomerData customerData = new CustomerData();
+		customerData.setCustomerPk(customerPk);
+		List<CashBackOffer> cashBackOffers = cashBackOfferRepository.findAllByActive(Boolean.TRUE, new Sort(new Sort.Order(Sort.Direction.ASC, "priority")));
+		List<ClaimCashBack> claims = claimRepository.findAllByCustomerPk(customerPk);
+		if(CollectionUtils.isNotEmpty(cashBackOffers))
+		{
+			List<CashBackOfferData> cashBackOfferData = cashBackOffers.stream().map(cashBackOfferMapper::apply).collect(Collectors.toList());
+			customerData.setCashBackOfferData(cashBackOfferData);
+		}
+		if(CollectionUtils.isNotEmpty(claims))
+		{
+			List<CashBackClaimData> cashBackClaimData =  claims.stream().map(claimCashBackMapper).collect(Collectors.toList());
+			customerData.setCashBackClaimData(cashBackClaimData);
+		}
+		return customerData;
 	}
 
 }
