@@ -6,8 +6,8 @@ import java.util.Set;
 
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffer;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CashBackOfferData;
+import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CustomerData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.OrdersData;
-import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.PriceData;
 
 public interface CashBackService
 {
@@ -23,5 +23,7 @@ public interface CashBackService
 	List<CashBackOffer> getAllActiveCashBackOffersNotClaimedByUser(String customerPk);
 
 	void persistCashbackOffer(final CashBackOfferData cashBackOfferData);
+
+	CustomerData getClaimsAndOffersForCustomer(String customerPK);
 }
 

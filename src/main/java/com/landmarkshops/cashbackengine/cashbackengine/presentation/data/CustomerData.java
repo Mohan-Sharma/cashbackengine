@@ -1,5 +1,7 @@
 package com.landmarkshops.cashbackengine.cashbackengine.presentation.data;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +16,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class CashBackFactData
+public class CustomerData
 {
-	private String name;
-	private String value;
-	private String operator;
+	private String customerPk;
+	private List<CashBackClaimData> cashBackClaimData;
+	private List<CashBackOfferData> cashBackOfferData;
 }
