@@ -30,7 +30,9 @@ public class CategoryTargetMileStoneRule {
 	public boolean itChecks(@Fact("categories") Set<String> categories, @Fact("cashbackId") String cashbackId, @Fact("customerPk") String customerPk, @Fact("usedCategories") Set<String> usedCategories)
 	{
 
-		if(usedCategories.size() > 0)
+		Set<String> temporaryUsedCategory = Sets.newHashSet(usedCategories);
+		temporaryUsedCategory.retainAll(categories);
+		if(temporaryUsedCategory.size() > 0)
 		{
 			ClaimCashBack claim = claimRepository.findOneByCashbackIdAndCustomerPk(cashbackId, customerPk);
 			if(Objects.isNull(claim))
@@ -47,8 +49,6 @@ public class CategoryTargetMileStoneRule {
 						stages.add(stage);
 
 					});
-			Set<String> temporaryUsedCategory = Sets.newHashSet(usedCategories);
-			temporaryUsedCategory.retainAll(categories);
 
 			categories.removeAll(usedCategories);
 			claim = claim
