@@ -1,5 +1,6 @@
 package com.landmarkshops.cashbackengine.cashbackengine.application.service.impl;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -12,16 +13,24 @@ import javax.annotation.Resource;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.LocalDate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.landmarkshops.cashbackengine.cashbackengine.application.service.CashBackService;
-import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffers;
+import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffer;
+import com.landmarkshops.cashbackengine.cashbackengine.domain.model.ClaimCashBack;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Orders;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Orders.OrderStatus;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Price;
+import com.landmarkshops.cashbackengine.cashbackengine.persistence.CashBackOfferRepository;
+import com.landmarkshops.cashbackengine.cashbackengine.persistence.ClaimRepository;
 import com.landmarkshops.cashbackengine.cashbackengine.persistence.OrdersRepository;
+import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CashBackOfferData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.OrdersData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.PriceData;
 
@@ -35,8 +44,20 @@ public class CashBackServiceImpl implements CashBackService
 	@Autowired
 	private OrdersRepository ordersRepository;
 
-	private Function<Price, PriceData> priceMapper =
+	@Autowired
+	private CashBackOfferRepository cashBackOfferRepository;
+
+	@Autowired
+	private ClaimRepository claimRepository;
+
+	private Function<Price, PriceData> priceDataMapper =
 			price -> PriceData
+					.builder()
+					.value(price.getValue())
+					.currencyISO(price.getCurrencyISO())
+					.build();
+	private Function<PriceData, Price> priceMapper =
+			price -> Price
 					.builder()
 					.value(price.getValue())
 					.currencyISO(price.getCurrencyISO())
@@ -44,15 +65,15 @@ public class CashBackServiceImpl implements CashBackService
 
 	private Function<Orders, OrdersData> ordersMapper =
 			order ->
-				OrdersData
-						.builder()
-						.orderCode(order.getOrderCode())
-						.categories(order.getCategories())
-						.customerPk(order.getCustomerPk())
-						.orderCreationTime(order.getOrderCreationTime())
-						.orderStatus(order.getOrderStatus().getDescription())
-						.price(priceMapper.apply(order.getPrice()))
-						.build();
+					OrdersData
+							.builder()
+							.orderCode(order.getOrderCode())
+							.categories(order.getCategories())
+							.customerPk(order.getCustomerPk())
+							.orderCreationTime(order.getOrderCreationTime())
+							.orderStatus(order.getOrderStatus().getDescription())
+							.price(priceDataMapper.apply(order.getPrice()))
+							.build();
 
 	@Override
 	public void persistOrderDetails(final OrdersData ordersData)
@@ -90,7 +111,7 @@ public class CashBackServiceImpl implements CashBackService
 	}
 
 	@Override
-	public List<OrdersData> fetchAllOrders(final Integer durationInDays)
+	public List<OrdersData> fetchAllOrdersForCustomer(final long customerPk, final Integer durationInDays)
 	{
 		List<Orders> orders;
 		if(Objects.isNull(durationInDays))
@@ -99,7 +120,26 @@ public class CashBackServiceImpl implements CashBackService
 		{
 			LocalDate currentDate = LocalDate.now();
 			LocalDate pastDate = currentDate.minusDays(durationInDays);
-			orders = ordersRepository.findAllByOrderCreationTimeBetween(pastDate, currentDate);
+			orders = ordersRepository.findAllByCustomerPkAndOrderCreationTimeBetween(customerPk, pastDate, currentDate);
+		}
+		if(CollectionUtils.isNotEmpty(orders))
+		{
+			return orders.stream().map(ordersMapper).collect(Collectors.toList());
+		}
+		return Collections.EMPTY_LIST;
+	}
+
+	@Override public List<OrdersData> fetchAllOrdersForCustomerGreaterThanThresholdPrice(long customerPk,
+			Integer durationInDays, BigDecimal minOrderValue, String currencyISO)
+	{
+		List<Orders> orders;
+		if(Objects.isNull(durationInDays))
+			orders = ordersRepository.findAll();
+		else
+		{
+			LocalDate currentDate = LocalDate.now();
+			LocalDate pastDate = currentDate.minusDays(durationInDays);
+			orders = ordersRepository.findAllByCustomerPkAndOrderCreationTimeBetweenAndPriceValueAndPriceCurrencyISO(customerPk, pastDate, currentDate, minOrderValue, currencyISO);
 		}
 		if(CollectionUtils.isNotEmpty(orders))
 		{
@@ -120,9 +160,26 @@ public class CashBackServiceImpl implements CashBackService
 	}
 
 	@Override
-	public List<CashBackOffers> getAllActiveCashBackOffersNotClaimedByUser(long customerPk) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<CashBackOffer> getAllActiveCashBackOffersNotClaimedByUser(long customerPk) {
+		final Set<Long> claimedOffers = Sets.newHashSet();
+		List<CashBackOffer> cashBackOffers = cashBackOfferRepository.findAllByActive(Boolean.TRUE, new Sort(new Sort.Order(Sort.Direction.ASC, "priority")));
+		List<ClaimCashBack> claims = claimRepository.findAllByCustomerPkAndStatusIn(customerPk, Lists.newArrayList("CLAIMED", "READY_TO_CLAIM"));
+		if(CollectionUtils.isNotEmpty(claims))
+			claims
+					.stream()
+					.forEach(claim -> claimedOffers.add(claim.getCashbackId()));
+		if(CollectionUtils.isNotEmpty(cashBackOffers))
+			cashBackOffers = cashBackOffers.stream().filter(offer -> !claimedOffers.contains(offer.getCashbackId())).collect(Collectors.toList());
+		return cashBackOffers;
+	}
+
+	@Override
+	public void persistCashbackOffer(CashBackOfferData cashBackOfferData)
+	{
+		CashBackOffer cashBackOffer = CashBackOffer.builder().build();
+		BeanUtils.copyProperties(cashBackOfferData, cashBackOffer);
+		cashBackOffer.setClaimAmount(priceMapper.apply(cashBackOfferData.getClaimAmount()));
+		cashBackOfferRepository.save(cashBackOffer);
 	}
 
 }

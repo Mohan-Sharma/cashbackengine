@@ -5,10 +5,8 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class Stage {
-
-	
+public class Stage
+{
 	private String status;
-	
 	private String identifier;
 }

@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.landmarkshops.cashbackengine.cashbackengine.application.events.OrderReceivedEventPublisher;
 import com.landmarkshops.cashbackengine.cashbackengine.application.service.CashBackService;
-import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffers;
+import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffer;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.rules.OrderTargetMileStoneRuleListener;
-import com.landmarkshops.cashbackengine.cashbackengine.domain.rules.OrderTargetMilestonesRule;
+import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CashBackOfferData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.OrdersData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.PriceData;
 
@@ -35,7 +35,7 @@ public class CashBackController
 
 	@Resource
 	private CashBackService cashBackService;
-	
+
 	@Resource
 	private OrderReceivedEventPublisher OrderReceivedEventPublisher;
 	
@@ -50,7 +50,7 @@ public class CashBackController
 	@RequestMapping(value = "/getOrders", method = RequestMethod.GET)
 	public @ResponseBody List<OrdersData> findAllOrders(@RequestParam(required = false) final Integer durationInDays)
 	{
-		return cashBackService.fetchAllOrders(durationInDays);
+		return null;
 	}
 
 
@@ -62,14 +62,20 @@ public class CashBackController
 	
 	
 	@RequestMapping(value = "/getCashBackOffers", method = RequestMethod.GET)
-	public @ResponseBody List<CashBackOffers> findCashBackOffers(@RequestParam("customerPk") String customerPk )
+	public @ResponseBody List<CashBackOffer> findCashBackOffers(@RequestParam("customerPk") String customerPk )
 	{
-		List<CashBackOffers> cbOffers = new ArrayList<>();
+		List<CashBackOffer> cbOffers = new ArrayList<>();
 		
 		return cbOffers;
 	}
-	
-	
+
+	@RequestMapping(value = "/createOffer", method = RequestMethod.POST)
+	public @ResponseBody String createOffer(@RequestBody final CashBackOfferData cashBackOffer)
+	{
+		cashBackService.persistCashbackOffer(cashBackOffer);
+		return "Success";
+	}
+
 	@RequestMapping(value = "/testRule", method = RequestMethod.GET)
 	public @ResponseBody List<OrdersData> testRule() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
 	{

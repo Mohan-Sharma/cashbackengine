@@ -1,12 +1,9 @@
 package com.landmarkshops.cashbackengine.cashbackengine.domain.model;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Set;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -23,23 +20,20 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Builder
-@EqualsAndHashCode(of="offerCode")
+@EqualsAndHashCode(exclude = "cashbackId")
 @AllArgsConstructor
 @Document
-@EntityListeners(AuditingEntityListener.class)
 public class CashBackOffer implements Serializable
 {
 	@Id
-	private CashbackId cashbackId;
-	private OfferStatus offerStatus;
-	private LocalDate claimDate;
+	private long cashbackId;
 	private Price claimAmount;
-	private String customerPk;
-
-	public enum OfferStatus
-	{
-		CREATED, READY, AVAILED;
-	}
+	private String ruleFileName;
+	private boolean active;
+	private Set<CashBackFact> cashBackFacts;
+	private int priority;
+	private String description;
+	private String offerName;
 }
 
 
