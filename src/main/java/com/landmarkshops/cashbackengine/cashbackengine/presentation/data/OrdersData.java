@@ -1,9 +1,13 @@
 package com.landmarkshops.cashbackengine.cashbackengine.presentation.data;
 
-import java.time.LocalDate;
+import org.joda.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,9 +18,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class OrdersData
 {
-	private String orderCode;
+	private long orderCode;
 	private long customerPk;
 	private PriceData price;
 	private String orderStatus;

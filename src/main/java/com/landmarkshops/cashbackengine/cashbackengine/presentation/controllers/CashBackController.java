@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 import javax.annotation.Resource;
@@ -47,9 +48,16 @@ public class CashBackController
 	}
 
 	@RequestMapping(value = "/getOrders", method = RequestMethod.GET)
-	public @ResponseBody List<OrdersData> findAllOrders()
+	public @ResponseBody List<OrdersData> findAllOrders(@RequestParam(required = false) final Integer durationInDays)
 	{
-		return cashBackService.fetchAllOrders();
+		return cashBackService.fetchAllOrders(durationInDays);
+	}
+
+
+	@RequestMapping(value = "/getAllCategoryForCustomer", method = RequestMethod.GET)
+	public @ResponseBody Set<String> getAllCategoryForCustomer(@RequestParam final long customerPK, @RequestParam final int durationInDays)
+	{
+		return cashBackService.getAllCategoryForCustomer(customerPK, durationInDays);
 	}
 	
 	
@@ -67,7 +75,7 @@ public class CashBackController
 	{
 			List<OrdersData> fetchAllOrders = new ArrayList<>();
 			OrdersData data = new OrdersData();
-			data.setOrderCode("2312");
+			data.setOrderCode(2312L);
 			data.setOrderStatus("delivered");
 			PriceData price = new PriceData();
 			price.setCurrencyISO("INR");

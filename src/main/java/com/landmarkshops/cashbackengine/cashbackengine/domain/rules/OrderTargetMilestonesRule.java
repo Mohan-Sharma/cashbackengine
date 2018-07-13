@@ -29,7 +29,7 @@ public class OrderTargetMilestonesRule {
 			List<Stage> stages = new ArrayList<>();
 			orders.stream().filter(order ->order.getOrderStatus().equals(orderStatus)).filter(order -> order.getPrice().getValue().doubleValue()>=minOrderValue).forEach( order ->{
 				Stage stage = new Stage();
-				String orderCode = order.getOrderCode();
+				String orderCode = String.valueOf( order.getOrderCode());
 				stage.setIdentifier(orderCode);
 				stage.setStatus("completed");
 				stages.add(stage);

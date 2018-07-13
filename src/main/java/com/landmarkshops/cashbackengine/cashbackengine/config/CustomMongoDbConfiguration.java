@@ -1,7 +1,6 @@
 package com.landmarkshops.cashbackengine.cashbackengine.config;
 
 import java.net.UnknownHostException;
-import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
