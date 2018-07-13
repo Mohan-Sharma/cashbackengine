@@ -16,4 +16,6 @@ public interface ClaimRepository extends MongoRepository<ClaimCashBack, String>
 	List<ClaimCashBack> findAllByCustomerPkAndStatusIn(String customerPk, List<String> status);
 
 	List<ClaimCashBack> findAllByCustomerPk(String customerPk);
+
+	ClaimCashBack findOneByClaimIdAndCustomerPk(String claimId, String customerPk);
 }

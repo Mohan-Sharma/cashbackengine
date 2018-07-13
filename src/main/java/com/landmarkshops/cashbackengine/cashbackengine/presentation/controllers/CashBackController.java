@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -14,6 +15,7 @@ import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.api.RulesEngine;
 import org.jeasy.rules.core.DefaultRulesEngine;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -83,9 +85,12 @@ public class CashBackController
 	}
 
 	@RequestMapping(value = "/claim", method = RequestMethod.POST)
-	public @ResponseBody Double claim(@RequestBody final String ClaimId, final String customerPk)
+	public @ResponseBody Double claim(@RequestBody final String claimId, final String customerPk)
 	{
-		return 100.0;
+		PriceData priceData = cashBackService.getClaimAmountFromCustomer(claimId, customerPk);
+		if(Objects.nonNull(priceData))
+			return priceData.getValue().doubleValue();
+		return 0.0d;
 	}
 	
 	

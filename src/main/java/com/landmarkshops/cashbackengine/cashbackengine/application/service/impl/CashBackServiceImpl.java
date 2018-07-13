@@ -224,4 +224,20 @@ public class CashBackServiceImpl implements CashBackService
 		return customerData;
 	}
 
+	@Override public PriceData getClaimAmountFromCustomer(final String claimId, final String customerPk)
+	{
+		ClaimCashBack claimCashBack = claimRepository.findOneByClaimIdAndCustomerPk(claimId, customerPk);
+		if(Objects.nonNull(claimCashBack))
+		{
+			CashBackOffer cashBackOffer = cashBackOfferRepository
+					.findOneByCashbackIdAndActive(claimCashBack.getCashbackId(), Boolean.TRUE);
+			if (Objects.nonNull(cashBackOffer))
+			{
+				Price price = cashBackOffer.getClaimAmount();
+				return priceDataMapper.apply(price);
+			}
+		}
+		return null;
+	}
+
 }

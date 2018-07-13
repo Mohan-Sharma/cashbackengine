@@ -8,6 +8,7 @@ import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffe
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CashBackOfferData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.CustomerData;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.OrdersData;
+import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.PriceData;
 
 public interface CashBackService
 {
@@ -25,5 +26,7 @@ public interface CashBackService
 	void persistCashbackOffer(final CashBackOfferData cashBackOfferData);
 
 	CustomerData getClaimsAndOffersForCustomer(String customerPK);
+
+	PriceData getClaimAmountFromCustomer(String claimId, String customerPk);
 }
 

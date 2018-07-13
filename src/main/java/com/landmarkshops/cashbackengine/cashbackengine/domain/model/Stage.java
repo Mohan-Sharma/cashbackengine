@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Embeddable
 @Builder
+@Setter
 public class Stage implements Serializable
 {
 	private String status;
