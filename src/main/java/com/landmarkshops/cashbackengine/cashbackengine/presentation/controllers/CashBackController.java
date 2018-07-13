@@ -1,5 +1,6 @@
 package com.landmarkshops.cashbackengine.cashbackengine.presentation.controllers;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.landmarkshops.cashbackengine.cashbackengine.application.events.OrderReceivedEventPublisher;
 import com.landmarkshops.cashbackengine.cashbackengine.application.service.CashBackService;
+import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffers;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.rules.OrderTargetMileStoneRuleListener;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.rules.OrderTargetMilestonesRule;
 import com.landmarkshops.cashbackengine.cashbackengine.presentation.data.OrdersData;
@@ -33,13 +36,13 @@ public class CashBackController
 	private CashBackService cashBackService;
 	
 	@Resource
-	private OrderReceivedEventPublisher orderRecivedEventPublisher;
+	private OrderReceivedEventPublisher OrderReceivedEventPublisher;
 	
 	@RequestMapping(value = "/postOrder", method = RequestMethod.POST)
 	public @ResponseBody String publishOrderPlaceEvent(@RequestBody final OrdersData ordersData)
 	{
 		cashBackService.persistOrderDetails(ordersData);
-		orderRecivedEventPublisher.publish(ordersData.getCustomerPk());
+		OrderReceivedEventPublisher.publish(ordersData.getCustomerPk());
 		return "Success";
 	}
 
@@ -50,8 +53,17 @@ public class CashBackController
 	}
 	
 	
+	@RequestMapping(value = "/getCashBackOffers", method = RequestMethod.GET)
+	public @ResponseBody List<CashBackOffers> findCashBackOffers(@RequestParam("customerPk") String customerPk )
+	{
+		List<CashBackOffers> cbOffers = new ArrayList<>();
+		
+		return cbOffers;
+	}
+	
+	
 	@RequestMapping(value = "/testRule", method = RequestMethod.GET)
-	public @ResponseBody List<OrdersData> testRule()
+	public @ResponseBody List<OrdersData> testRule() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
 	{
 			List<OrdersData> fetchAllOrders = new ArrayList<>();
 			OrdersData data = new OrdersData();
@@ -71,7 +83,9 @@ public class CashBackController
 			facts.put("minOrderValue", 500.0);
 			
 			Rules rules = new Rules();
-			rules.register(new OrderTargetMilestonesRule());
+			Class<?> clazz = Class.forName("com.landmarkshops.cashbackengine.cashbackengine.domain.rules.OrderTargetMilestonesRule");
+			Object obj = clazz.getConstructor().newInstance();
+			rules.register(obj);
 			
 			RulesEngine rulesEngine = new DefaultRulesEngine();
 			rulesEngine.getRuleListeners().add(new OrderTargetMileStoneRuleListener());

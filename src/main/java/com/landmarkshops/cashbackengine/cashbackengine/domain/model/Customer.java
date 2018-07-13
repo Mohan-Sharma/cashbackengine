@@ -25,7 +25,7 @@ import lombok.Setter;
 @Getter
 @Document
 @EqualsAndHashCode(of = "customerPK")
-public class Customer extends Auditable implements Serializable
+public class Customer  implements Serializable
 {
 	@Id
 	@NotNull

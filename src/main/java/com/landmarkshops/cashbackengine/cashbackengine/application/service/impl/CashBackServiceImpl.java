@@ -8,12 +8,14 @@ import java.util.function.Function;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.jeasy.rules.api.Rule;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 import com.landmarkshops.cashbackengine.cashbackengine.application.service.CashBackService;
+import com.landmarkshops.cashbackengine.cashbackengine.domain.model.CashBackOffers;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Customer;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Offer;
 import com.landmarkshops.cashbackengine.cashbackengine.domain.model.Orders;
@@ -89,5 +91,13 @@ public class CashBackServiceImpl implements CashBackService
 		}
 		return Collections.EMPTY_LIST;
 	}
+
+	@Override
+	public List<CashBackOffers> getAllActiveCashBackOffersNotClaimedByUser(long customerPk) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 
 }
