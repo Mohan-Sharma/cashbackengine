@@ -71,7 +71,7 @@ public class CategoryTargetMileStoneRule {
 	}
 
 	@Action
-	public void updateClaimStatus(@Fact("cashbackCode") String cashbackId,@Fact("customerPk") String customerPk)
+	public void updateClaimStatus(@Fact("cashbackId") String cashbackId, @Fact("customerPk") String customerPk)
 	{
 		ClaimCashBack claim = claimRepository.findOneByCashbackIdAndCustomerPk(cashbackId, customerPk);
 		claim.setStatus("READY_TO_CLAIM");
