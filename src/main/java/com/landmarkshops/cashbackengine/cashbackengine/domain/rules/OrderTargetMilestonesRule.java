@@ -37,8 +37,6 @@ public class OrderTargetMilestonesRule {
 
 		if(numberOfOrder>0)
 		{
-			// update Stage.
-			// Search Cash back.
 			ClaimCashBack claim = claimRepository.findOneByCashbackIdAndCustomerPk(cashbackId, customerPk);
 			if(Objects.isNull(claim))
 			{
