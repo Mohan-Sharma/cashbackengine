@@ -2,6 +2,7 @@ package com.landmarkshops.cashbackengine.cashbackengine.presentation.data;
 
 import org.joda.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
@@ -26,5 +27,6 @@ public class OrdersData
 	private PriceData price;
 	private String orderStatus;
 	private String[] categories;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate orderCreationTime;
 }
