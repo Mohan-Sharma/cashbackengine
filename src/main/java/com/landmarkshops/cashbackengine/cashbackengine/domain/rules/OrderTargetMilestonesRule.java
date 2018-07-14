@@ -43,14 +43,18 @@ public class OrderTargetMilestonesRule {
 				claim = new ClaimCashBack();
 			}
 			List<Stage> stages = new ArrayList<>();
-			orders.stream().filter(order ->order.getOrderStatus().equals(orderStatus)).filter(order -> order.getPrice().getValue().doubleValue()>=minimumOrderTotal).forEach( order ->{
-				Stage stage = new Stage();
-				String orderCode = String.valueOf( order.getOrderCode());
-				stage.setIdentifier(orderCode);
-				stage.setStatus("completed");
-				stages.add(stage);
+			orders
+					.stream()
+					.filter(order ->order.getOrderStatus().equalsIgnoreCase(orderStatus))
+					.filter(order -> order.getPrice().getValue().doubleValue()>=minimumOrderTotal)
+					.forEach( order ->{
+						Stage stage = new Stage();
+						String orderCode = String.valueOf( order.getOrderCode());
+						stage.setIdentifier(orderCode);
+						stage.setStatus("completed");
+						stages.add(stage);
 
-			});
+					});
 			claim = claim
 					.toBuilder()
 					.cashbackId(cashbackId)

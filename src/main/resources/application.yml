@@ -38,12 +38,4 @@ server:
   port: 2003
   context-path: /cashbackengine
   servlet-path: /
-  ssl:
-    key-alias: selfsigned_localhost_sslserver
-    key-password: welcome1
-    key-store: ssl-server.jks
-    key-store-provider: SUN
-    key-store-type: JKS
-  http:
-    port: 2002
 

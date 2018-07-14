@@ -178,7 +178,7 @@ public class CashBackServiceImpl implements CashBackService
 	{
 		LocalDate currentDate = LocalDate.now();
 		LocalDate pastDate = currentDate.minusDays(durationInDays);
-		List<Orders> orders = ordersRepository.findAllByCustomerPkAndOrderCreationTimeBetween(customerPK, pastDate, currentDate);
+		List<Orders> orders = ordersRepository.findAllByCustomerPkAndOrderCreationTimeBetween(customerPK, pastDate, currentDate.plusDays(1));
 		if(CollectionUtils.isNotEmpty(orders))
 			return orders.stream().map(Orders::getCategories).flatMap(Stream::of).collect(Collectors.toSet());
 		return Collections.EMPTY_SET;

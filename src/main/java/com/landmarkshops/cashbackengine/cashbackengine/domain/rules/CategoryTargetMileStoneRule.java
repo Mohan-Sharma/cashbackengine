@@ -40,7 +40,7 @@ public class CategoryTargetMileStoneRule {
 				claim = ClaimCashBack.builder().build();
 			}
 			final List<Stage> stages = new ArrayList<>();
-			usedCategories
+			temporaryUsedCategory
 					.forEach( category ->
 					{
 						Stage stage = new Stage();
