@@ -234,6 +234,8 @@ public class CashBackServiceImpl implements CashBackService
 			if (Objects.nonNull(cashBackOffer))
 			{
 				Price price = cashBackOffer.getClaimAmount();
+				claimCashBack.setStatus("AVAILED");
+				claimRepository.save(claimCashBack);
 				return priceDataMapper.apply(price);
 			}
 		}

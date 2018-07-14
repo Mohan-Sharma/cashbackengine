@@ -85,7 +85,7 @@ public class CashBackController
 	}
 
 	@RequestMapping(value = "/claim", method = RequestMethod.POST)
-	public @ResponseBody Double claim(@RequestBody final String claimId, final String customerPk)
+	public @ResponseBody Double claim(@RequestParam final String claimId, @RequestParam final String customerPk)
 	{
 		PriceData priceData = cashBackService.getClaimAmountFromCustomer(claimId, customerPk);
 		if(Objects.nonNull(priceData))
