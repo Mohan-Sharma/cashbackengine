@@ -50,12 +50,6 @@ public class CashBackController
 		return "Success";
 	}
 
-	@RequestMapping(value = "/getOrders", method = RequestMethod.GET)
-	public @ResponseBody List<OrdersData> findAllOrders(@RequestParam(required = false) final Integer durationInDays)
-	{
-		return null;
-	}
-
 	@RequestMapping(value = "/getClaimsAndOffersForCustomer", method = RequestMethod.GET)
 	public @ResponseBody CustomerData getClaimsAndOffersForCustomer(@RequestParam final String customerPk)
 	{
